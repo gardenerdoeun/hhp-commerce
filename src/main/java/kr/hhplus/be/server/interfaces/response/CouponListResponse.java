@@ -12,22 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 public class CouponListResponse {
     private Long userId;
+    private List<CouponDetail> coupons;
 
     public CouponListResponse(Long userId, List<CouponDetail> coupons) {
         this.userId = userId;
         this.coupons = coupons;
     }
 
-    private List<CouponDetail> coupons;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public List<CouponDetail> getCoupons() {
-        return coupons;
-    }
-
+    @Getter @Setter
+    @NoArgsConstructor
     public static class CouponDetail {
         private Long couponId;
         private String couponName;
@@ -37,18 +30,6 @@ public class CouponListResponse {
             this.couponId = couponId;
             this.couponName = couponName;
             this.discountAmount = discountAmount;
-        }
-
-        public Long getCouponId() {
-            return couponId;
-        }
-
-        public String getCouponName() {
-            return couponName;
-        }
-
-        public double getDiscountAmount() {
-            return discountAmount;
         }
     }
 }

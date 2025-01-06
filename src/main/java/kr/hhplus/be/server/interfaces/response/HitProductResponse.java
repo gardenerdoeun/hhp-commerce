@@ -17,16 +17,4 @@ public class HitProductResponse {
         this.productName = productName;
         this.saleCount = String.valueOf(saleCount);
     }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public String getSaleCount() {
-        return saleCount;
-    }
 }

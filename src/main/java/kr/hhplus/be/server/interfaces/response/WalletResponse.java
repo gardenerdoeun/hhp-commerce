@@ -14,12 +14,4 @@ public class WalletResponse {
         this.userId = userId;
         this.balance = newBalance;
     }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
 }

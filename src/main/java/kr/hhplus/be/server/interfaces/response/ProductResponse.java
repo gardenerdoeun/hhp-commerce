@@ -19,20 +19,4 @@ public class ProductResponse {
         this.price = price;
         this.stockQuantity = stockQuantity;
     }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public int getStockQuantity() {
-        return stockQuantity;
-    }
 }
