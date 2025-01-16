@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import kr.hhplus.be.server.exception.AppException;
+import kr.hhplus.be.server.exception.ErrorCode;
 import kr.hhplus.be.server.infrastructure.inMemory.CouponIssueRepository;
 import kr.hhplus.be.server.infrastructure.inMemory.CouponRepository;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,9 @@ public class CouponService {
 
     public CouponIssue issueCoupon(Long couponId, Long userId) {
         Coupon coupon = couponRepo.findById(couponId)
-                .orElseThrow(() -> new RuntimeException("No coupon"));
+                .orElseThrow(() -> new AppException(ErrorCode.COUPON_NOT_FOUND));
         if (coupon.getQuantity() <= 0) {
-            throw new RuntimeException("No more coupon");
+            throw new AppException(ErrorCode.COUPON_EXHAUSTED);
         }
         coupon.setQuantity(coupon.getQuantity() - 1);
         couponRepo.save(coupon);
@@ -37,11 +39,21 @@ public class CouponService {
 
     public void useCoupon(Long couponIssueId, Long orderId, BigDecimal discount) {
         CouponIssue ci = issueRepo.findById(couponIssueId)
-                .orElseThrow(() -> new RuntimeException("No issue"));
+                .orElseThrow(() -> new AppException(ErrorCode.COUPON_ISSUE_NOT_FOUND));
         ci.setActionType(CouponIssueType.USED);
         ci.setOrderId(orderId);
         ci.setAppliedDiscount(discount);
         ci.setAppliedTime(LocalDateTime.now());
         issueRepo.save(ci);
+    }
+
+    public Coupon getCoupon(Long couponId) {
+        return couponRepo.findById(couponId)
+                .orElseThrow(() -> new AppException(ErrorCode.COUPON_NOT_FOUND));
+    }
+
+    public CouponIssue getCouponIssue(Long couponIssueId) {
+        return issueRepo.findById(couponIssueId)
+                .orElseThrow(() -> new AppException(ErrorCode.COUPON_ISSUE_NOT_FOUND));
     }
 }

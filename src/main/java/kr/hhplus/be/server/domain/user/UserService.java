@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.domain.user;
 
+import kr.hhplus.be.server.exception.AppException;
+import kr.hhplus.be.server.exception.ErrorCode;
 import kr.hhplus.be.server.infrastructure.inMemory.UserRepository;
 import kr.hhplus.be.server.infrastructure.inMemory.WalletRepository;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,9 @@ public class UserService {
         return user;
     }
 
-    public User getUser(Long userId) throws Exception {
+    public User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new Exception("회원이 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     public BigDecimal getBalance(Long userId) {
@@ -39,7 +41,7 @@ public class UserService {
 
     public BigDecimal chargeBalance(Long userId, BigDecimal amount) throws Exception {
         Wallet wallet = walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new Exception("지갑이 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
         wallet.setCurrentBalance(wallet.getCurrentBalance().add(amount));
         walletRepository.save(wallet);
         return wallet.getCurrentBalance();

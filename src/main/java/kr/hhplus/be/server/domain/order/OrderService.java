@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.order;
 
 import kr.hhplus.be.server.domain.product.ProductService;
+import kr.hhplus.be.server.exception.AppException;
+import kr.hhplus.be.server.exception.ErrorCode;
 import kr.hhplus.be.server.infrastructure.inMemory.OrderDetailRepository;
 import kr.hhplus.be.server.infrastructure.inMemory.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,6 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.COMPLETED);
         BigDecimal total = BigDecimal.ZERO;
 
-        // 먼저 Order 저장 (orderId 확보용)
         orderRepo.save(order);
 
         for (OrderItem i : items) {
@@ -55,5 +56,10 @@ public class OrderService {
 
         orderRepo.save(order);
         return order;
+    }
+
+    public Order getOrder(Long orderId) {
+        return orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.BAD_REQUEST, "Order not found"));
     }
 }

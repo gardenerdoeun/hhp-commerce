@@ -1,7 +1,12 @@
 package kr.hhplus.be.server.domain.product;
 
+import kr.hhplus.be.server.exception.AppException;
+import kr.hhplus.be.server.exception.ErrorCode;
 import kr.hhplus.be.server.infrastructure.inMemory.ProductRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -27,32 +32,30 @@ public class ProductService {
 
     public Product getProduct(Long productId) {
         return repo.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No product"));
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public ProductStock getStock(Long productId) {
         return repo.findByProductStockId(productId)
-                .orElseThrow(() -> new RuntimeException("No stock"));
+                .orElseThrow(() -> new AppException(ErrorCode.STOCK_NOT_FOUND));
     }
 
     public void decreaseStock(Long productId, int qty) {
         ProductStock s = getStock(productId);
         if (s.getStockQuantity() < qty) {
-            throw new RuntimeException("Not enough stock");
+            throw new AppException(ErrorCode.OUT_OF_STOCK);
         }
         s.setStockQuantity(s.getStockQuantity() - qty);
         repo.saveProductStock(s);
     }
 
-//    public List<Product> getProducts(int page, int size) {
-//        return repo
-//                .products
-//                .values()
-//                .stream()
-//                .skip((long) (page - 1) * size)
-//                .limit(size)
-//                .collect(Collectors.toList());
-//    }
+    public List<Product> getProducts(int page, int size) {
+        List<Product> all = repo.findAllProducts();
+        return all.stream()
+                .skip((long)(page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
+    }
 }
 
 
