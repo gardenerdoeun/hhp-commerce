@@ -25,22 +25,23 @@ public class OrderService {
         this.productService = productService;
     }
 
-    public Order createOrder(Long userId, List<OrderItem> items) {
+    public Order createOrder(Long userId, List<OrderItem> items, BigDecimal discountAmount, Long couponIssueId) {
+        // 우선 Order 객체 생성
         Order order = new Order();
         order.setUserId(userId);
         order.setOrderDate(LocalDateTime.now());
-        order.setOrderStatus(OrderStatus.COMPLETED);
-        BigDecimal total = BigDecimal.ZERO;
+        order.setOrderStatus(OrderStatus.COMPLETED); // 가정
+        order.setDiscountAmount(discountAmount == null ? BigDecimal.ZERO : discountAmount);
 
         orderRepo.save(order);
 
+        BigDecimal total = BigDecimal.ZERO;
         for (OrderItem i : items) {
             productService.decreaseStock(i.getProductId(), i.getQuantity());
             BigDecimal unitPrice = productService.getProduct(i.getProductId()).getProductPrice();
             BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(i.getQuantity()));
             total = total.add(subtotal);
 
-            // OrderDetail
             OrderDetail detail = new OrderDetail();
             detail.setOrderId(order.getOrderId());
             detail.setProductId(i.getProductId());
@@ -49,12 +50,11 @@ public class OrderService {
             detail.setSubTotalPrice(subtotal);
             detailRepo.save(detail);
         }
-
         order.setTotalAmount(total);
-        order.setDiscountAmount(BigDecimal.ZERO);
-        order.setFinalAmount(total);
-
+        order.setFinalAmount(total.subtract(order.getDiscountAmount()));
+        order.setCouponIssueId(couponIssueId);
         orderRepo.save(order);
+
         return order;
     }
 
