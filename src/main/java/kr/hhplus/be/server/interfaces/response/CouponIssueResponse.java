@@ -15,16 +15,4 @@ public class CouponIssueResponse {
         this.couponName = couponName;
         this.message = message;
     }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getCouponName() {
-        return couponName;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

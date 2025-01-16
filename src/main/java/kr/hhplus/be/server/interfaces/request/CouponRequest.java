@@ -8,12 +8,4 @@ import lombok.Setter;
 public class CouponRequest {
     private Long couponId;
     private String couponName;
-
-    public Long getCouponId() {
-        return couponId;
-    }
-
-    public String getCouponName() {
-        return couponName;
-    }
 }
