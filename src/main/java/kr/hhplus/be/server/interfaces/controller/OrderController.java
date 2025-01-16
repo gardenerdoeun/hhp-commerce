@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Order", description= "주문 관련 API")
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
     private final OrderFacade orderFacade;

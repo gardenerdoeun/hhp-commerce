@@ -20,7 +20,7 @@ import java.util.List;
 
 @Tag(name = "Product", description = "상품 관련 API")
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final ProductService productService;

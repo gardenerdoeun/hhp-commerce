@@ -20,7 +20,7 @@ public class WalletController {
     }
 
     @Operation(summary = "잔액 조회", description = "사용자의 현재 잔액을 조회합니다.")
-    @GetMapping("/{userId}/balance")
+    @GetMapping("/{userId}/v1/balance")
     public BigDecimal getBalance(@PathVariable Long userId) {
         return userService.getBalance(userId);
     }
