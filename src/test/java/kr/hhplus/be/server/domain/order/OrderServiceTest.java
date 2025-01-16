@@ -9,6 +9,7 @@ import kr.hhplus.be.server.infrastructure.inMemory.OrderRepository;
 import kr.hhplus.be.server.infrastructure.inMemory.ProductRepository;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +29,7 @@ class OrderServiceTest {
 
         // 주문
         OrderItem item = new OrderItem(product.getProductId(), 2);
-        Order order = oservice.createOrder(1L, Collections.singletonList(item));
+        Order order = oservice.createOrder(1L, Collections.singletonList(item), BigDecimal.valueOf(4000), null);
         assertNotNull(order.getOrderId());
         assertEquals(3, pservice.getStock(product.getProductId()).getStockQuantity());
 
