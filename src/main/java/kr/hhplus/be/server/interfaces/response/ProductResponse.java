@@ -1,22 +1,29 @@
 package kr.hhplus.be.server.interfaces.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import kr.hhplus.be.server.domain.product.Product;
+import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor
+import java.math.BigDecimal;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Builder
+@Getter
 public class ProductResponse {
-    private Long productId;
-    private String productName;
-    private double price;
-    private int stockQuantity;
+    private final Long productId;
+    private final String productName;
+    private final BigDecimal productPrice;
+    private final String productStatus; // 상태를 텍스트로 변환
+    private final Integer stockQuantity;
 
-
-    public ProductResponse(Long productId, String productName, double price, int stockQuantity) {
-        this.productId = productId;
-        this.productName = productName;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
+    // 정적 팩토리 메서드
+    public static ProductResponse from(Product product, Integer stockQuantity) {
+        return ProductResponse.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .productPrice(product.getProductPrice())
+                .productStatus(product.getProductName())
+                .stockQuantity(stockQuantity)
+                .build();
     }
 }
