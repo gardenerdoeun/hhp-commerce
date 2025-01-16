@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final kr.hhplus.be.server.infrastructure.inMemory.ProductRepository repo;
+    private final Object stockLock = new Object();
+
     public ProductService(ProductRepository repo) {
         this.repo = repo;
     }
@@ -40,13 +42,16 @@ public class ProductService {
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_NOT_FOUND));
     }
 
+    // 동시성 제어
     public void decreaseStock(Long productId, int qty) {
-        ProductStock s = getStock(productId);
-        if (s.getStockQuantity() < qty) {
-            throw new AppException(ErrorCode.OUT_OF_STOCK);
+        synchronized (stockLock) {
+            ProductStock s = getStock(productId);
+            if (s.getStockQuantity() < qty) {
+                throw new AppException(ErrorCode.OUT_OF_STOCK);
+            }
+            s.setStockQuantity(s.getStockQuantity() - qty);
+            repo.saveProductStock(s);
         }
-        s.setStockQuantity(s.getStockQuantity() - qty);
-        repo.saveProductStock(s);
     }
 
     public List<Product> getProducts(int page, int size) {
