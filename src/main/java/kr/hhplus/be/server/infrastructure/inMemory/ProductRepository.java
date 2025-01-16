@@ -4,9 +4,7 @@ import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductStock;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,5 +37,9 @@ public class ProductRepository {
 
     public Optional<ProductStock> findByProductStockId(long productStockId) {
         return Optional.ofNullable(stocks.get(productStockId));
+    }
+
+    public List<Product> findAllProducts() {
+        return new ArrayList<>(products.values());
     }
 }
