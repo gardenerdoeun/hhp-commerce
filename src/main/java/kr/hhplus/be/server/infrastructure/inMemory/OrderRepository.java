@@ -20,7 +20,7 @@ public class OrderRepository {
         orders.put(order.getOrderId(), order);
         return order;
     }
-    Optional<Order> findById(long orderId) {
+    public Optional<Order> findById(Long orderId) {
         return Optional.ofNullable(orders.get(orderId));
     }
 }
